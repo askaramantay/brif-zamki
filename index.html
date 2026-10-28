@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Бриф на разработку сайта</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+<script>
+/* ===================== НАСТРОЙКИ ===================== */
+const CONFIG = {
+  BOT_TOKEN: "8958787894:AAHrCgzITA71ITu8pMOV0i_3jsCddsYZ0pk",   // от @BotFather, вида 123456789:AA...
+  CHAT_ID:   "585518114",      // ваш числовой id, например 123456789
+  TITLE:     "Бриф на разработку сайта",
+  SUBTITLE:  "Сайт для отельных замков. Ответьте на вопросы — на это уйдёт 10–15 минут. Можно пропускать то, что пока неясно: обсудим на созвоне."
+};
+/* ===================================================== */
+</script>
+<style>
+:root{
+  --bg:#EEF1F4; --surface:#FFFFFF; --ink:#18202E; --muted:#5A6476; --line:#D5DBE3;
+  --brass:#9A6B22; --brass-soft:#F3E9D6; --ok:#2F7A4F; --err:#B3261E;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#12161D; --surface:#1A2029; --ink:#E7EBF0; --muted:#9AA4B4; --line:#2C3542;
+    --brass:#D2A65A; --brass-soft:#2E2617; --ok:#6BC28F; --err:#F2817A;
+    color-scheme: dark;
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.5 "Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--surface);z-index:10}
+.wrap{max-width:680px;margin:0 auto;padding:0 16px 48px}
+
+header.hero{padding:40px 0 28px}
+.tag{display:inline-flex;align-items:center;gap:10px;margin-bottom:20px}
+.tag svg{width:44px;height:44px;flex:none}
+h1{font:700 clamp(28px,7vw,40px)/1.1 "Unbounded","Golos Text",sans-serif;letter-spacing:-.01em;margin:0 0 14px}
+.lead{color:var(--muted);margin:0;max-width:56ch}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line);margin:0 -16px;padding:10px 16px}
+.bar-in{max-width:680px;margin:0 auto;display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted)}
+.track{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.fill{height:100%;width:0;background:var(--brass);transition:width .3s ease}
+.saved{white-space:nowrap}
+
+section.block{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 18px 8px;margin-top:18px}
+section.block h2{font:600 20px/1.3 "Golos Text",sans-serif;margin:0 0 4px;display:flex;gap:10px;align-items:baseline}
+section.block h2 .n{font-family:"Unbounded",sans-serif;font-weight:500;font-size:15px;color:var(--brass);min-width:1.6em}
+.hint{color:var(--muted);font-size:15px;margin:0 0 8px}
+
+.q{padding:14px 0;border-top:1px solid var(--line)}
+section.block h2 + .q, section.block .hint + .q{border-top:0}
+label.ql{display:block;font-weight:500;margin-bottom:8px}
+.req{color:var(--brass)}
+textarea,input[type=text],input[type=tel]{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-height:48px}
+textarea{resize:none;overflow:hidden;min-height:76px}
+textarea:focus,input:focus{outline:2px solid var(--brass);outline-offset:1px;border-color:transparent}
+.invalid{border-color:var(--err)!important}
+
+.checks{display:grid;gap:2px;padding:6px 0 10px}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:10px 4px;border-radius:8px;cursor:pointer}
+.chk input{width:22px;height:22px;margin:1px 0 0;accent-color:var(--brass);flex:none}
+.chk:has(input:checked){background:var(--brass-soft)}
+
+.send{margin-top:24px}
+button.primary{width:100%;min-height:56px;border:0;border-radius:12px;background:var(--ink);color:var(--surface);font:600 18px/1 "Golos Text",sans-serif;cursor:pointer}
+button.primary:disabled{opacity:.6;cursor:progress}
+button.primary:focus-visible{outline:3px solid var(--brass);outline-offset:3px}
+.msg{margin:12px 0 0;font-size:15px;min-height:1.5em}
+.msg.err{color:var(--err)}
+.foot{color:var(--muted);font-size:14px;text-align:center;margin-top:16px}
+
+.done{display:none;text-align:center;padding:72px 8px}
+.done h2{font:700 26px/1.2 "Unbounded",sans-serif;margin:20px 0 10px}
+.done p{color:var(--muted);margin:0 auto;max-width:40ch}
+body.sent .form-area{display:none}
+body.sent .done{display:block}
+@media (prefers-reduced-motion: reduce){.fill{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="form-area">
+    <header class="hero">
+      <div class="tag" aria-hidden="true">
+        <svg viewBox="0 0 44 44" fill="none"><rect x="6" y="2" width="32" height="40" rx="6" stroke="currentColor" stroke-width="2.2"/><circle cx="22" cy="11" r="3" fill="var(--brass)"/><path d="M13 24h18M13 30h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </div>
+      <h1 id="title"></h1>
+      <p class="lead" id="subtitle"></p>
+    </header>
+
+    <div class="bar"><div class="bar-in">
+      <div class="track" role="progressbar" aria-label="Заполнено разделов" aria-valuemin="0" aria-valuemax="11" aria-valuenow="0"><div class="fill" id="fill"></div></div>
+      <span id="count">0 из 11</span>
+      <span class="saved" id="saved"></span>
+    </div></div>
+
+    <form id="form" novalidate></form>
+
+    <div class="send">
+      <button type="button" class="primary" id="sendBtn">Отправить бриф</button>
+      <p class="msg" id="msg" role="status" aria-live="polite"></p>
+      <p class="foot">Ответы сохраняются на этом телефоне, пока вы не отправите бриф.</p>
+    </div>
+  </div>
+
+  <div class="done" role="status">
+    <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="var(--brass-soft)"/><path d="M20 33l8 8 16-17" fill="none" stroke="var(--ok)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <h2>Бриф отправлен</h2>
+    <p>Спасибо! Мы изучим ответы и свяжемся с вами, чтобы обсудить детали и сроки.</p>
+  </div>
+</div>
+
+<script>
+const SECTIONS = [
+  {t:"О компании", q:[
+    {id:"company", l:"Название компании и бренд(ы) замков", req:true, short:true},
+    {id:"role", l:"Вы производитель, официальный дистрибьютор или интегратор?"},
+    {id:"usp", l:"Чем вы отличаетесь от конкурентов (цена, гарантия, сервис, монтаж, склад)?"},
+    {id:"geo", l:"География работы: города и страны"},
+    {id:"years", l:"Сколько лет на рынке, ключевые клиенты (отели, сети)"},
+    {id:"oldsite", l:"Есть ли текущий сайт? Если да — ссылка и что в нём не устраивает"}
+  ]},
+  {t:"Цели сайта", q:[
+    {id:"goal", l:"Главная задача сайта: заявки, продажи онлайн, поиск дилеров, имидж?"},
+    {id:"action", l:"Какое действие посетителя важнее всего (звонок, заявка на расчёт, запрос КП, покупка)?"},
+    {id:"leads", l:"Сколько заявок в месяц хотите получать через сайт?"},
+    {id:"leadsto", l:"Кто обрабатывает заявки и куда они должны приходить (почта, WhatsApp, Telegram, CRM)?"}
+  ]},
+  {t:"Целевая аудитория", q:[
+    {id:"clients", l:"Кто ваши основные клиенты: отели, хостелы, апартаменты, застройщики, проектировщики, дилеры?"},
+    {id:"dm", l:"Кто обычно принимает решение о покупке (владелец, управляющий, инженер, закупщик)?"},
+    {id:"faq", l:"Какие вопросы клиенты задают чаще всего перед покупкой?"},
+    {id:"scale", l:"Работаете с крупными сетями, небольшими отелями или с обоими?"}
+  ]},
+  {t:"Продукция и каталог", q:[
+    {id:"sku", l:"Сколько позиций будет в каталоге на старте и через год?"},
+    {id:"types", l:"Какие типы продукции: RFID-замки, замки с Bluetooth / мобильным ключом, сейфы, энкодеры, карты-ключи, энергосберегающие выключатели, ПО?"},
+    {id:"filters", l:"По каким параметрам клиенты выбирают замок (тип ключа, материал, цвет, совместимость, цена)?"},
+    {id:"prices", l:"Показывать цены на сайте или «по запросу»?"},
+    {id:"kits", l:"Нужны ли готовые решения для отеля «под ключ» на N номеров?"},
+    {id:"services", l:"Есть ли услуги: монтаж, настройка, обучение, гарантия, сервис?"}
+  ]},
+  {t:"Структура и функционал", hint:"Отметьте, что нужно на сайте.", checks:[
+    "Главная страница","Каталог с фильтрами и карточками товаров","Страница «Решения для отелей»",
+    "Совместимость с PMS-системами","Калькулятор стоимости оснащения отеля","Онлайн-корзина и оплата",
+    "Форма «Запросить КП / расчёт»","Портфолио и кейсы объектов","Отзывы клиентов",
+    "Страница для дилеров и партнёров","Документация: инструкции, сертификаты, ПО","Блог / новости",
+    "Вопросы и ответы (FAQ)","О компании, контакты, карта","Онлайн-чат или кнопки мессенджеров",
+    "Личный кабинет клиента или дилера"
+  ], q:[
+    {id:"other_pages", l:"Что ещё нужно на сайте?"},
+    {id:"langs", l:"На каких языках нужен сайт?", short:true},
+    {id:"admin", l:"Будете сами обновлять товары и цены через админ-панель?"}
+  ]},
+  {t:"Интеграции", q:[
+    {id:"erp", l:"Нужна ли выгрузка товаров и остатков из 1С или другой учётной системы?"},
+    {id:"crm", l:"Какую CRM используете (Bitrix24, amoCRM и др.)?"},
+    {id:"pay", l:"Нужна ли онлайн-оплата? Какие платёжные системы?"},
+    {id:"market", l:"Нужны ли интеграции с маркетплейсами или службами доставки?"}
+  ]},
+  {t:"Дизайн и стиль", q:[
+    {id:"brand", l:"Есть ли логотип, фирменные цвета, брендбук?"},
+    {id:"mood", l:"Какое впечатление должен производить сайт (премиальный, технологичный, строгий, дружелюбный)?"},
+    {id:"dislike", l:"Что точно не нравится в дизайне сайтов?"}
+  ]},
+  {t:"Контент", q:[
+    {id:"photos", l:"Есть ли качественные фото продукции и установленных объектов?"},
+    {id:"shoot", l:"Нужна ли фото- или видеосъёмка?"},
+    {id:"specs", l:"Есть ли готовые описания товаров и технические характеристики?"},
+    {id:"copy", l:"Кто пишет тексты: вы или нужен копирайтер?"}
+  ]},
+  {t:"Конкуренты и примеры", q:[
+    {id:"rivals", l:"Ссылки на сайты конкурентов"},
+    {id:"likes", l:"Сайты (любой тематики), которые нравятся, и чем именно"},
+    {id:"dislikes", l:"Сайты, которые не нравятся, и почему"}
+  ]},
+  {t:"Продвижение и поддержка", q:[
+    {id:"promo", l:"Планируете продвигать сайт через SEO или рекламу?"},
+    {id:"domain", l:"Есть ли домен и хостинг?"},
+    {id:"analytics", l:"Нужна ли настройка аналитики (Яндекс Метрика, Google Analytics)?"},
+    {id:"support", l:"Нужна ли поддержка и доработки после запуска?"}
+  ]},
+  {t:"Сроки, бюджет, контакты", q:[
+    {id:"deadline", l:"Желаемая дата запуска, есть ли жёсткий дедлайн (выставка, сезон)?"},
+    {id:"budget", l:"Ориентировочный бюджет или вилка"},
+    {id:"approver", l:"Кто со стороны компании принимает решения и согласовывает этапы?"},
+    {id:"name", l:"Ваше имя", req:true, short:true},
+    {id:"phone", l:"Телефон", req:true, short:true, tel:true},
+    {id:"messenger", l:"Удобный мессенджер для связи", short:true},
+    {id:"extra", l:"Что ещё важно знать о проекте?"}
+  ]}
+];
+
+const STORE = "hotel-lock-brief-v1";
+const $ = s => document.querySelector(s);
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+document.title = CONFIG.TITLE;
+$("#title").textContent = CONFIG.TITLE;
+$("#subtitle").textContent = CONFIG.SUBTITLE;
+
+// Render
+const form = $("#form");
+form.innerHTML = SECTIONS.map((s, i) => {
+  let h = `<section class="block" data-s="${i}"><h2><span class="n">${i+1}</span><span>${esc(s.t)}</span></h2>`;
+  if (s.hint) h += `<p class="hint">${esc(s.hint)}</p>`;
+  if (s.checks) h += `<div class="checks">` + s.checks.map((c, j) =>
+    `<label class="chk"><input type="checkbox" name="chk" value="${esc(c)}" id="c${j}"><span>${esc(c)}</span></label>`).join("") + `</div>`;
+  h += s.q.map(q => {
+    const field = q.short
+      ? `<input type="${q.tel ? "tel" : "text"}" id="${q.id}" name="${q.id}" ${q.tel ? 'inputmode="tel" autocomplete="tel"' : ""} ${q.id==="name" ? 'autocomplete="name"' : ""}>`
+      : `<textarea id="${q.id}" name="${q.id}" rows="2"></textarea>`;
+    return `<div class="q"><label class="ql" for="${q.id}">${esc(q.l)}${q.req ? ' <span class="req">*</span>' : ""}</label>${field}</div>`;
+  }).join("");
+  return h + `</section>`;
+}).join("");
+
+// Auto-grow textareas
+const grow = t => { t.style.height = "auto"; t.style.height = t.scrollHeight + 2 + "px"; };
+form.querySelectorAll("textarea").forEach(t => t.addEventListener("input", () => grow(t)));
+
+// Save / restore
+function collect(){
+  const data = {};
+  form.querySelectorAll("textarea,input[type=text],input[type=tel]").forEach(el => data[el.id] = el.value);
+  data.__checks = [...form.querySelectorAll('input[name=chk]:checked')].map(c => c.value);
+  return data;
+}
+function restore(){
+  let d = null;
+  try { d = JSON.parse(localStorage.getItem(STORE) || "null"); } catch(e) {}
+  if (!d) return;
+  Object.keys(d).forEach(k => { const el = document.getElementById(k); if (el && typeof d[k] === "string") el.value = d[k]; });
+  (d.__checks || []).forEach(v => form.querySelectorAll('input[name=chk]').forEach(c => { if (c.value === v) c.checked = true; }));
+}
+let saveTimer;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try { localStorage.setItem(STORE, JSON.stringify(collect())); $("#saved").textContent = "Сохранено"; } catch(e) {}
+  }, 400);
+}
+
+// Progress: a section counts once any answer in it is filled
+function progress(){
+  let n = 0;
+  form.querySelectorAll("section.block").forEach(sec => {
+    const any = [...sec.querySelectorAll("textarea,input[type=text],input[type=tel]")].some(e => e.value.trim())
+             || sec.querySelector("input[type=checkbox]:checked");
+    if (any) n++;
+  });
+  $("#fill").style.width = (n / SECTIONS.length * 100) + "%";
+  $("#count").textContent = `${n} из ${SECTIONS.length}`;
+  document.querySelector(".track").setAttribute("aria-valuenow", n);
+}
+form.addEventListener("input", e => { e.target.classList.remove("invalid"); save(); progress(); });
+form.addEventListener("change", () => { save(); progress(); });
+restore();
+form.querySelectorAll("textarea").forEach(grow);
+progress();
+
+// Build Telegram message
+function buildText(d){
+  const lines = [`Новый бриф: ${d.company || "без названия"}`, `Контакт: ${d.name} · ${d.phone}${d.messenger ? " · " + d.messenger : ""}`, ""];
+  SECTIONS.forEach((s, i) => {
+    const part = [];
+    if (s.checks && d.__checks.length) part.push("Нужно на сайте:\n" + d.__checks.map(c => "  ✓ " + c).join("\n"));
+    s.q.forEach(q => { const v = (d[q.id] || "").trim(); if (v) part.push(`▸ ${q.l}\n${v}`); });
+    if (part.length) lines.push(`━━ ${i+1}. ${s.t} ━━`, ...part, "");
+  });
+  return lines.join("\n");
+}
+function chunks(text, max = 3900){
+  const out = []; let cur = "";
+  text.split("\n").forEach(line => {
+    while (line.length > max) { if (cur) { out.push(cur); cur = ""; } out.push(line.slice(0, max)); line = line.slice(max); }
+    if ((cur + "\n" + line).length > max) { out.push(cur); cur = line; } else cur = cur ? cur + "\n" + line : line;
+  });
+  if (cur) out.push(cur);
+  return out;
+}
+async function sendPart(text){
+  const body = new URLSearchParams({ chat_id: CONFIG.CHAT_ID, text, disable_web_page_preview: "true" });
+  const r = await fetch(`https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/sendMessage`, { method: "POST", body });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || !j.ok) throw new Error(j.description || ("HTTP " + r.status));
+}
+
+// Submit
+$("#sendBtn").addEventListener("click", async () => {
+  const msg = $("#msg"); msg.className = "msg"; msg.textContent = "";
+  const missing = ["company","name","phone"].map(id => document.getElementById(id)).filter(el => !el.value.trim());
+  if (missing.length){
+    missing.forEach(el => el.classList.add("invalid"));
+    missing[0].scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center"});
+    setTimeout(() => missing[0].focus({preventScroll:true}), 300);
+    msg.className = "msg err"; msg.textContent = "Заполните поля со звёздочкой: название компании, имя и телефон.";
+    return;
+  }
+  if (CONFIG.BOT_TOKEN.includes("ВСТАВЬТЕ") || CONFIG.CHAT_ID.includes("ВСТАВЬТЕ")){
+    msg.className = "msg err"; msg.textContent = "Форма ещё не настроена: в файле не указан токен бота или chat_id.";
+    return;
+  }
+  const btn = $("#sendBtn"); btn.disabled = true; btn.textContent = "Отправляем…";
+  try {
+    for (const part of chunks(buildText(collect()))) await sendPart(part);
+    try { localStorage.removeItem(STORE); } catch(e) {}
+    document.body.classList.add("sent"); window.scrollTo(0, 0);
+  } catch (e) {
+    msg.className = "msg err";
+    msg.textContent = "Не получилось отправить. Проверьте интернет и нажмите ещё раз — ответы сохранены.";
+    console.error(e);
+  } finally {
+    btn.disabled = false; btn.textContent = "Отправить бриф";
+  }
+});
+</script>
+</body>
+</html>
